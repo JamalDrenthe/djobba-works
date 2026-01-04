@@ -16,9 +16,11 @@ import FlexibeleInzet from "./pages/voor-bedrijven/flexibele-inzet";
 import VastTalent from "./pages/voor-bedrijven/vast-talent";
 import ProfessionalDashboard from "./pages/professionals/dashboard";
 import ProfessionalWallet from "./pages/professionals/wallet";
+import ProfessionalFactoring from "./pages/professionals/factoring";
 import EmployerDashboard from "./pages/employers/dashboard";
 import ChatList from "./pages/chat/index";
 import ChatThread from "./pages/chat/[id]";
+import AdminDashboard from "./pages/admin/dashboard";
 
 const queryClient = new QueryClient();
 
@@ -65,11 +67,23 @@ const App = () => (
               <ProfessionalWallet />
             </ProtectedRoute>
           } />
+          <Route path="/professionals/factoring" element={
+            <ProtectedRoute>
+              <ProfessionalFactoring />
+            </ProtectedRoute>
+          } />
           
           {/* Employer Pages */}
           <Route path="/employers/dashboard" element={
             <ProtectedRoute>
               <EmployerDashboard />
+            </ProtectedRoute>
+          } />
+          
+          {/* Admin Pages */}
+          <Route path="/admin/dashboard" element={
+            <ProtectedRoute>
+              <AdminDashboard />
             </ProtectedRoute>
           } />
           

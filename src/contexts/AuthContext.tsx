@@ -16,6 +16,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Check if test mode is enabled
+    const isTestMode = import.meta.env.VITE_TEST_MODE === 'true';
+    
+    if (isTestMode) {
+      // Use mock user in test mode
+      const mockUser: User = {
+        id: 'test-user-123',
+        email: 'test@djobba.nl',
+        aud: 'authenticated',
+        role: 'authenticated',
+        app_metadata: {},
+        user_metadata: { name: 'Test Gebruiker', role: 'professional' },
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        phone: '',
+        email_confirmed_at: new Date().toISOString(),
+        phone_confirmed_at: null,
+        last_sign_in_at: new Date().toISOString(),
+        factors: null,
+        identities: []
+      };
+      setUser(mockUser);
+      setLoading(false);
+      console.log('✅ Test mode enabled - using mock user:', mockUser.email);
+      return;
+    }
+
     // Get initial session
     const initializeAuth = async () => {
       try {

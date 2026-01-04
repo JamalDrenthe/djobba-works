@@ -14,7 +14,10 @@ import {
   Calendar,
   Euro,
   Users,
-  TrendingUp
+  TrendingUp,
+  Star,
+  MapPin,
+  Briefcase
 } from "lucide-react";
 
 export default function KorteOpdrachtenPage() {
@@ -222,6 +225,188 @@ export default function KorteOpdrachtenPage() {
         </div>
       </section>
 
+      {/* Popular Categories */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Populaire categorieën
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Ontdek de meest gevraagde vaardigheden en sectoren
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col">
+              <Briefcase className="h-12 w-12 text-primary mx-auto mb-4 flex-shrink-0" />
+              <h4 className="font-semibold mb-2">Administratief</h4>
+              <p className="text-sm text-muted-foreground mb-3">150+ opdrachten</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mt-auto">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.8</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col">
+              <Users className="h-12 w-12 text-primary mx-auto mb-4 flex-shrink-0" />
+              <h4 className="font-semibold mb-2">Sales</h4>
+              <p className="text-sm text-muted-foreground mb-3">120+ opdrachten</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mt-auto">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.7</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col">
+              <Zap className="h-12 w-12 text-primary mx-auto mb-4 flex-shrink-0" />
+              <h4 className="font-semibold mb-2">IT Support</h4>
+              <p className="text-sm text-muted-foreground mb-3">95+ opdrachten</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mt-auto">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.9</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow cursor-pointer h-full flex flex-col">
+              <Calendar className="h-12 w-12 text-primary mx-auto mb-4 flex-shrink-0" />
+              <h4 className="font-semibold mb-2">Evenementen</h4>
+              <p className="text-sm text-muted-foreground mb-3">80+ opdrachten</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mt-auto">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.6</span>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Assignments Preview */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                Recente korte opdrachten
+              </h2>
+              <p className="text-muted-foreground">
+                Bekijk de nieuwste mogelijkheden die direct beschikbaar zijn
+              </p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link to="/opdrachten?type=kort">
+                Bekijk alle opdrachten
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Assignment 1 */}
+            <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+              <CardContent className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Briefcase className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium whitespace-nowrap">
+                    Direct beschikbaar
+                  </span>
+                </div>
+                <h3 className="font-semibold mb-2 line-clamp-2">Administratief medewerker gezocht</h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                  Ondersteuning bij administratieve taken voor een groeiend bedrijf in Amsterdam.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>Amsterdam</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4 flex-shrink-0" />
+                    <span>2-3 weken</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-auto pt-2">
+                  <span className="text-lg font-bold text-primary">€15-20/uur</span>
+                  <Button size="sm" asChild>
+                    <Link to="/opdrachten/123">Bekijk</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Assignment 2 */}
+            <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+              <CardContent className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Users className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium whitespace-nowrap">
+                    Direct beschikbaar
+                  </span>
+                </div>
+                <h3 className="font-semibold mb-2 line-clamp-2">Sales support medewerker</h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                  Help het salesteam met klantcontact en administratie voor een tech startup.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>Utrecht</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4 flex-shrink-0" />
+                    <span>1-2 maanden</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-auto pt-2">
+                  <span className="text-lg font-bold text-primary">€18-22/uur</span>
+                  <Button size="sm" asChild>
+                    <Link to="/opdrachten/124">Bekijk</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Assignment 3 */}
+            <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+              <CardContent className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Zap className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium whitespace-nowrap">
+                    Urgent
+                  </span>
+                </div>
+                <h3 className="font-semibold mb-2 line-clamp-2">IT support helpdesk</h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                  Eerste lijn support voor software vragen bij een middelgroot bedrijf.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>Rotterdam</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4 flex-shrink-0" />
+                    <span>1 week</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-auto pt-2">
+                  <span className="text-lg font-bold text-primary">€20-25/uur</span>
+                  <Button size="sm" asChild>
+                    <Link to="/opdrachten/125">Bekijk</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-primary text-primary-foreground">
         <div className="container text-center">
@@ -239,9 +424,10 @@ export default function KorteOpdrachtenPage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button size="lg" variant="outline" asChild className="bg-background text-foreground hover:bg-background/90 border-background/50">
               <Link to="/opdrachten?type=kort">
                 Bekijk opdrachten
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>

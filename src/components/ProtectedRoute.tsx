@@ -8,7 +8,10 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
-
+  
+  // TEST MODE: bypass in development
+  const isTestMode = import.meta.env.VITE_TEST_MODE === 'true';
+  
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -16,8 +19,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
       </div>
     );
   }
-
-  if (!user) {
+  
+  if (!user && !isTestMode) {
     return <Navigate to="/login" replace />;
   }
 

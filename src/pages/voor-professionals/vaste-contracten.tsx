@@ -14,7 +14,11 @@ import {
   Briefcase,
   Award,
   Heart,
-  Calendar
+  Calendar,
+  Star,
+  MapPin,
+  Clock,
+  Euro
 } from "lucide-react";
 
 export default function VasteContractenPage() {
@@ -249,6 +253,219 @@ export default function VasteContractenPage() {
         </div>
       </section>
 
+      {/* Featured Companies */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Topbedrijven wachten op jou
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Werk voor de beste bedrijven in Nederland met uitstekende voorwaarden
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <Card className="p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Building2 className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">TechCorp Solutions</h4>
+                  <p className="text-sm text-muted-foreground">Technology • 50-100 employees</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
+                Leading IT company specializing in software development and cloud solutions.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 text-sm mb-4">
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span>Amsterdam</span>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-500">
+                  <Star className="h-4 w-4 fill-current" />
+                  <span>4.9</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-auto">
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs">3 posities</span>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs">Actief</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">FinanceHub</h4>
+                  <p className="text-sm text-muted-foreground">Finance • 100-250 employees</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
+                Innovative financial services company with focus on digital banking solutions.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 text-sm mb-4">
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span>Rotterdam</span>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-500">
+                  <Star className="h-4 w-4 fill-current" />
+                  <span>4.8</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-auto">
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs">5 posities</span>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs">Actief</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Users className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">HealthCare Plus</h4>
+                  <p className="text-sm text-muted-foreground">Healthcare • 200-500 employees</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
+                Modern healthcare provider focused on digital health solutions and patient care.
+              </p>
+              <div className="flex flex-wrap items-center gap-4 text-sm mb-4">
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span>Utrecht</span>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-500">
+                  <Star className="h-4 w-4 fill-current" />
+                  <span>4.7</span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-auto">
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs">2 posities</span>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs">Actief</span>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Contract Opportunities */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+                Recente vaste contracten
+              </h2>
+              <p className="text-muted-foreground">
+                Lange termijn posities bij uitstekende bedrijven
+              </p>
+            </div>
+            <Button variant="outline" asChild>
+              <Link to="/opdrachten?type=lang">
+                Bekijk alle contracten
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Contract 1 */}
+            <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+              <CardContent className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Building2 className="h-5 w-5 text-secondary-foreground" />
+                  </div>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium whitespace-nowrap">
+                    Direct solliciteren
+                  </span>
+                </div>
+                <h3 className="font-semibold mb-2 line-clamp-2">Senior Software Developer</h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                  Full-stack developer voor innovatieve fintech startup. Ervaring met React en Node.js vereist.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>Amsterdam</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4 flex-shrink-0" />
+                    <span>32-40 uur</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-lg font-bold text-primary">€4.500-5.500/maand</span>
+                  <div className="flex items-center gap-1 text-yellow-500">
+                    <Star className="h-4 w-4 fill-current" />
+                    <span className="text-sm">4.8</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">React</span>
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Node.js</span>
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">TypeScript</span>
+                </div>
+                <Button className="w-full mt-auto" asChild>
+                  <Link to="/opdrachten/456">Solliciteer nu</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Contract 2 */}
+            <Card className="hover:shadow-lg transition-shadow h-full flex flex-col">
+              <CardContent className="p-6 flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Users className="h-5 w-5 text-secondary-foreground" />
+                  </div>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium whitespace-nowrap">
+                    Direct solliciteren
+                  </span>
+                </div>
+                <h3 className="font-semibold mb-2 line-clamp-2">HR Business Partner</h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 flex-1">
+                  Strategische HR rol voor groeiend bedrijf. Ervaring met talent management en organisatieontwikkeling.
+                </p>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 flex-shrink-0" />
+                    <span>Utrecht</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-4 w-4 flex-shrink-0" />
+                    <span>36-40 uur</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-lg font-bold text-primary">€3.800-4.200/maand</span>
+                  <div className="flex items-center gap-1 text-yellow-500">
+                    <Star className="h-4 w-4 fill-current" />
+                    <span className="text-sm">4.6</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">HRM</span>
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Talent Management</span>
+                  <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Strategie</span>
+                </div>
+                <Button className="w-full mt-auto" asChild>
+                  <Link to="/opdrachten/457">Solliciteer nu</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container">
@@ -332,9 +549,10 @@ export default function VasteContractenPage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10">
+            <Button size="lg" variant="outline" asChild className="bg-background/10 text-background hover:bg-background/20 border-background/50">
               <Link to="/opdrachten?type=lang">
                 Bekijk alle contracten
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>

@@ -4,8 +4,8 @@ import { supabase } from '@/lib/supabase/client';
 // Type definitions
 interface MicrocopyEntry {
   key: string;
-  content_nl: string;
-  content_en: string;
+  text_nl: string;
+  text_en: string;
   variables?: string[];
 }
 
@@ -42,8 +42,8 @@ async function fetchMicrocopy(): Promise<MicrocopyCache> {
     const newCache: MicrocopyCache = {};
     (data || []).forEach((entry: MicrocopyEntry) => {
       newCache[entry.key] = {
-        nl: entry.content_nl,
-        en: entry.content_en,
+        nl: entry.text_nl,
+        en: entry.text_en,
         variables: entry.variables || []
       };
     });

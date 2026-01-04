@@ -14,7 +14,12 @@ import {
   Calendar,
   Euro,
   Shield,
-  BarChart3
+  BarChart3,
+  Star,
+  Building2,
+  Briefcase,
+  Award,
+  Target
 } from "lucide-react";
 
 export default function FlexibeleInzetPage() {
@@ -332,6 +337,176 @@ export default function FlexibeleInzetPage() {
         </div>
       </section>
 
+      {/* Success Stories */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Succesverhalen van opdrachtgevers
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Hoe andere bedrijven flexibele inzet succesvol gebruiken
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <Card className="p-6 h-full flex flex-col">
+              <div className="flex items-center gap-1 mb-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="text-yellow-500">★</span>
+                ))}
+              </div>
+              <p className="text-muted-foreground mb-4 flex-1">
+                "Binnen 24 uur 3 gekwalificeerde professionals gevonden voor onze evenementenweek. Perfecte oplossing!"
+              </p>
+              <div className="flex items-center gap-3 mt-auto">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex-shrink-0"></div>
+                <div>
+                  <p className="font-semibold text-sm">Erik Jansen</p>
+                  <p className="text-xs text-muted-foreground">Event Manager, EventCo</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 h-full flex flex-col">
+              <div className="flex items-center gap-1 mb-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="text-yellow-500">★</span>
+                ))}
+              </div>
+              <p className="text-muted-foreground mb-4 flex-1">
+                "Flexibele inzet via DJOBBA bespaart ons 40% kosten vergeleken met traditionele uitzendkrachten."
+              </p>
+              <div className="flex items-center gap-3 mt-auto">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex-shrink-0"></div>
+                <div>
+                  <p className="font-semibold text-sm">Lisa de Boer</p>
+                  <p className="text-xs text-muted-foreground">HR Director, RetailPlus</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 h-full flex flex-col">
+              <div className="flex items-center gap-1 mb-4">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="text-yellow-500">★</span>
+                ))}
+              </div>
+              <p className="text-muted-foreground mb-4 flex-1">
+                "De kwaliteit van de professionals is uitstekend. Alleen de beste kandidaten worden geselecteerd."
+              </p>
+              <div className="flex items-center gap-3 mt-auto">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex-shrink-0"></div>
+                <div>
+                  <p className="font-semibold text-sm">Mark van Dijk</p>
+                  <p className="text-xs text-muted-foreground">Operations Manager, LogiCo</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Professionals */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Top professionals beschikbaar
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Ontmoet enkele van onze best beoordeelde flexibele professionals
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 flex-shrink-0">
+                <Briefcase className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="font-semibold mb-2">Sarah M.</h4>
+              <p className="text-sm text-muted-foreground mb-3">Administratief Professional</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mb-3">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.9</span>
+                <span className="text-sm text-muted-foreground">(47 opdrachten)</span>
+              </div>
+              <div className="flex flex-wrap gap-1 justify-center mb-3">
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Admin</span>
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Excel</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Direct beschikbaar</p>
+              <Button size="sm" variant="outline" className="w-full mt-auto">
+                Uitnodigen
+              </Button>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 flex-shrink-0">
+                <Users className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="font-semibold mb-2">Mike R.</h4>
+              <p className="text-sm text-muted-foreground mb-3">Sales Expert</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mb-3">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.8</span>
+                <span className="text-sm text-muted-foreground">(32 opdrachten)</span>
+              </div>
+              <div className="flex flex-wrap gap-1 justify-center mb-3">
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Sales</span>
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">B2B</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Direct beschikbaar</p>
+              <Button size="sm" variant="outline" className="w-full mt-auto">
+                Uitnodigen
+              </Button>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 flex-shrink-0">
+                <Zap className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="font-semibold mb-2">Lisa T.</h4>
+              <p className="text-sm text-muted-foreground mb-3">IT Support Specialist</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mb-3">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">5.0</span>
+                <span className="text-sm text-muted-foreground">(28 opdrachten)</span>
+              </div>
+              <div className="flex flex-wrap gap-1 justify-center mb-3">
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">IT</span>
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Helpdesk</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Binnen 48 uur</p>
+              <Button size="sm" variant="outline" className="w-full mt-auto">
+                Uitnodigen
+              </Button>
+            </Card>
+
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 flex-shrink-0">
+                <Calendar className="h-8 w-8 text-primary" />
+              </div>
+              <h4 className="font-semibold mb-2">David K.</h4>
+              <p className="text-sm text-muted-foreground mb-3">Event Coordinator</p>
+              <div className="flex items-center justify-center gap-1 text-yellow-500 mb-3">
+                <Star className="h-4 w-4 fill-current" />
+                <span className="text-sm">4.7</span>
+                <span className="text-sm text-muted-foreground">(19 opdrachten)</span>
+              </div>
+              <div className="flex flex-wrap gap-1 justify-center mb-3">
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Events</span>
+                <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs">Logistiek</span>
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">Direct beschikbaar</p>
+              <Button size="sm" variant="outline" className="w-full mt-auto">
+                Uitnodigen
+              </Button>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="py-16 md:py-24">
         <div className="container">
@@ -373,9 +548,10 @@ export default function FlexibeleInzetPage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+            <Button size="lg" variant="outline" asChild className="bg-background text-foreground hover:bg-background/90 border-background/50">
               <Link to="/contact">
                 Plan een demo
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>

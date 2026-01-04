@@ -15,7 +15,11 @@ import {
   Target,
   Clock,
   Search,
-  Handshake
+  Handshake,
+  Star,
+  Briefcase,
+  MapPin,
+  Euro
 } from "lucide-react";
 
 export default function VastTalentPage() {
@@ -344,6 +348,189 @@ export default function VastTalentPage() {
         </div>
       </section>
 
+      {/* Recent Placements */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Recent succesvolle plaatsingen
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Professionals die wij recent hebben geplaatst bij topbedrijven
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <Card className="p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="h-6 w-6 text-secondary-foreground" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">Marketing Manager</h4>
+                  <p className="text-sm text-muted-foreground">TechCorp Solutions</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
+                Senior marketing professional met 8+ jaar ervaring in B2B tech marketing.
+              </p>
+              <div className="flex items-center justify-between mt-auto">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span>Amsterdam</span>
+                </div>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs whitespace-nowrap">Geplaatst</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Building2 className="h-6 w-6 text-secondary-foreground" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">Software Developer</h4>
+                  <p className="text-sm text-muted-foreground">FinanceHub</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
+                Full-stack developer gespecialiseerd in fintech en betalingsoplossingen.
+              </p>
+              <div className="flex items-center justify-between mt-auto">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span>Rotterdam</span>
+                </div>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs whitespace-nowrap">Geplaatst</span>
+              </div>
+            </Card>
+
+            <Card className="p-6 hover:shadow-lg transition-shadow h-full flex flex-col">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Target className="h-6 w-6 text-secondary-foreground" />
+                </div>
+                <div>
+                  <h4 className="font-semibold">HR Business Partner</h4>
+                  <p className="text-sm text-muted-foreground">HealthCare Plus</p>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4 flex-1">
+                Strategische HR professional met ervaring in healthcare sector.
+              </p>
+              <div className="flex items-center justify-between mt-auto">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 flex-shrink-0" />
+                  <span>Utrecht</span>
+                </div>
+                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs whitespace-nowrap">Geplaatst</span>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-16 md:py-24">
+        <div className="container">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Duidelijke tarieven voor vaste contracten
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Transparante pricing met gegarandeerde resultaten
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Standard */}
+            <Card className="p-8 h-full flex flex-col">
+              <h3 className="text-xl font-semibold mb-4">Standard</h3>
+              <div className="text-3xl font-bold mb-4">15%</div>
+              <p className="text-muted-foreground mb-6">Van het eerste jaarsalar</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">3 maanden garantie</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Basic screening</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">E-mail support</span>
+                </li>
+              </ul>
+              <Button variant="outline" className="w-full mt-auto">
+                Start werving
+              </Button>
+            </Card>
+
+            {/* Professional */}
+            <Card className="p-8 border-2 border-secondary relative h-full flex flex-col">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <span className="bg-secondary text-secondary-foreground px-4 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                  Meest populair
+                </span>
+              </div>
+              <h3 className="text-xl font-semibold mb-4">Professional</h3>
+              <div className="text-3xl font-bold mb-4">20%</div>
+              <p className="text-muted-foreground mb-6">Van het eerste jaarsalar</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">6 maanden garantie</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Uitgebreide screening</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Prioritaire support</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Assessments</span>
+                </li>
+              </ul>
+              <Button className="w-full mt-auto">
+                Start werving
+              </Button>
+            </Card>
+
+            {/* Enterprise */}
+            <Card className="p-8 h-full flex flex-col">
+              <h3 className="text-xl font-semibold mb-4">Enterprise</h3>
+              <div className="text-3xl font-bold mb-4">Custom</div>
+              <p className="text-muted-foreground mb-6">Op maat gemaakt</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">12 maanden garantie</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Executive search</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Dedicated account manager</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span className="text-sm">Custom process</span>
+                </li>
+              </ul>
+              <Button variant="outline" className="w-full mt-auto">
+                Contact sales
+              </Button>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-16 md:py-24">
         <div className="container">
@@ -427,9 +614,10 @@ export default function VastTalentPage() {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" asChild className="border-secondary-foreground/30 text-secondary-foreground hover:bg-secondary-foreground/10">
+            <Button size="lg" variant="outline" asChild className="bg-background/10 text-background hover:bg-background/20 border-background/50">
               <Link to="/tarieven">
                 Bekijk tarieven
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
           </div>

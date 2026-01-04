@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Checkbox } from '@/components/ui/checkbox';
 import { AssignmentWithDetails } from '@/types/database';
 import { AssignmentCard } from '@/components/AssignmentCard';
 import { 
@@ -17,7 +19,14 @@ import {
   Filter,
   Search,
   Zap,
-  Briefcase
+  Briefcase,
+  X,
+  ChevronDown,
+  ChevronUp,
+  History,
+  Save,
+  TrendingUp,
+  TrendingDown
 } from 'lucide-react';
 
 interface TwoTabFeedProps {
@@ -39,6 +48,45 @@ export function TwoTabFeed({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedLocation, setSelectedLocation] = useState<string>('all');
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [salaryRange, setSalaryRange] = useState<[number, number]>([0, 100]);
+  const [duration, setDuration] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('newest');
+  const [searchHistory, setSearchHistory] = useState<string[]>([]);
+  const [savedSearches, setSavedSearches] = useState<{
+    id: number;
+    query: string;
+    category: string;
+    location: string;
+    salaryRange: [number, number];
+    duration: string;
+    sortBy: string;
+    createdAt: string;
+  }[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Debounce search query
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    searchTimeoutRef.current = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+      if (searchQuery.trim() && !searchHistory.includes(searchQuery.trim())) {
+        setSearchHistory(prev => [searchQuery.trim(), ...prev.slice(0, 4)]);
+      }
+    }, 300);
+    
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery, searchHistory]);
 
   // Get unique categories and locations from assignments
   const allCategories = useMemo(() => {
@@ -57,32 +105,177 @@ export function TwoTabFeed({
     return Array.from(locations);
   }, [shortAssignments, longAssignments]);
 
-  // Filter assignments based on search and filters
-  const filteredShortAssignments = useMemo(() => {
-    return shortAssignments.filter(assignment => {
-      const matchesSearch = !searchQuery || 
-        assignment.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        assignment.description.toLowerCase().includes(searchQuery.toLowerCase());
+  // Get salary range from assignments
+  const salaryData = useMemo(() => {
+    const rates = [...shortAssignments, ...longAssignments]
+      .map(a => a.rate_cents / 100)
+      .filter(rate => rate > 0);
+    
+    if (rates.length === 0) return { min: 0, max: 100 };
+    
+    return {
+      min: Math.min(...rates),
+      max: Math.max(...rates)
+    };
+  }, [shortAssignments, longAssignments]);
+
+  // Filter assignments based on all criteria
+  const filterAssignments = useCallback((assignments: AssignmentWithDetails[]) => {
+    return assignments.filter(assignment => {
+      // Search query filter
+      if (debouncedQuery) {
+        const query = debouncedQuery.toLowerCase();
+        const matchesTitle = assignment.title.toLowerCase().includes(query);
+        const matchesCompany = assignment.employer_name?.toLowerCase().includes(query) || '';
+        const matchesDescription = assignment.description?.toLowerCase().includes(query) || '';
+        const matchesCategory = assignment.category?.toLowerCase().includes(query) || '';
+        
+        if (!matchesTitle && !matchesCompany && !matchesDescription && !matchesCategory) {
+          return false;
+        }
+      }
       
-      const matchesCategory = selectedCategory === 'all' || assignment.category === selectedCategory;
-      const matchesLocation = selectedLocation === 'all' || assignment.location === selectedLocation;
+      // Category filter
+      if (selectedCategory !== 'all' && assignment.category !== selectedCategory) {
+        return false;
+      }
       
-      return matchesSearch && matchesCategory && matchesLocation;
+      // Location filter
+      if (selectedLocation !== 'all' && assignment.location !== selectedLocation) {
+        return false;
+      }
+      
+      // Salary filter
+      const rate = assignment.rate_cents / 100;
+      if (rate < salaryRange[0] || rate > salaryRange[1]) {
+        return false;
+      }
+      
+      // Duration filter for short assignments
+      if (activeTab === 'short' && duration !== 'all') {
+        if (duration === 'day' && !assignment.title.toLowerCase().includes('dag')) {
+          return false;
+        }
+        if (duration === 'week' && !assignment.title.toLowerCase().includes('week')) {
+          return false;
+        }
+        if (duration === 'month' && !assignment.title.toLowerCase().includes('maand')) {
+          return false;
+        }
+      }
+      
+      return true;
     });
-  }, [shortAssignments, searchQuery, selectedCategory, selectedLocation]);
+  }, [debouncedQuery, selectedCategory, selectedLocation, salaryRange, duration, activeTab]);
+
+  // Sort assignments
+  const sortAssignments = useCallback((assignments: AssignmentWithDetails[]) => {
+    const sorted = [...assignments];
+    
+    switch (sortBy) {
+      case 'newest':
+        return sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      case 'oldest':
+        return sorted.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      case 'salary_high':
+        return sorted.sort((a, b) => b.rate_cents - a.rate_cents);
+      case 'salary_low':
+        return sorted.sort((a, b) => a.rate_cents - b.rate_cents);
+      case 'deadline':
+        return sorted.sort((a, b) => {
+          const aDeadline = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+          const bDeadline = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+          return aDeadline - bDeadline;
+        });
+      default:
+        return sorted;
+    }
+  }, [sortBy]);
+
+  // Apply filters and sorting
+  const filteredShortAssignments = useMemo(() => {
+    return sortAssignments(filterAssignments(shortAssignments));
+  }, [shortAssignments, filterAssignments, sortAssignments]);
 
   const filteredLongAssignments = useMemo(() => {
-    return longAssignments.filter(assignment => {
-      const matchesSearch = !searchQuery || 
-        assignment.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        assignment.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesCategory = selectedCategory === 'all' || assignment.category === selectedCategory;
-      const matchesLocation = selectedLocation === 'all' || assignment.location === selectedLocation;
-      
-      return matchesSearch && matchesCategory && matchesLocation;
+    return sortAssignments(filterAssignments(longAssignments));
+  }, [longAssignments, filterAssignments, sortAssignments]);
+
+  // Get search suggestions
+  const searchSuggestions = useMemo(() => {
+    if (!debouncedQuery || debouncedQuery.length < 2) return [];
+    
+    const suggestions = new Set<string>();
+    const query = debouncedQuery.toLowerCase();
+    
+    [...shortAssignments, ...longAssignments].forEach(assignment => {
+      if (assignment.title.toLowerCase().includes(query)) {
+        suggestions.add(assignment.title);
+      }
+      if (assignment.employer_name && assignment.employer_name.toLowerCase().includes(query)) {
+        suggestions.add(assignment.employer_name);
+      }
+      if (assignment.category && assignment.category.toLowerCase().includes(query)) {
+        suggestions.add(assignment.category);
+      }
     });
-  }, [longAssignments, searchQuery, selectedCategory, selectedLocation]);
+    
+    return Array.from(suggestions).slice(0, 5);
+  }, [debouncedQuery, shortAssignments, longAssignments]);
+
+  // Save current search
+  const saveSearch = () => {
+    const search = {
+      id: Date.now(),
+      query: searchQuery,
+      category: selectedCategory,
+      location: selectedLocation,
+      salaryRange,
+      duration,
+      sortBy,
+      createdAt: new Date().toISOString()
+    };
+    
+    setSavedSearches(prev => [search, ...prev.slice(0, 4)]);
+  };
+
+  // Load saved search
+  const loadSavedSearch = (search: {
+    id: number;
+    query: string;
+    category: string;
+    location: string;
+    salaryRange: [number, number];
+    duration: string;
+    sortBy: string;
+    createdAt: string;
+  }) => {
+    setSearchQuery(search.query);
+    setSelectedCategory(search.category);
+    setSelectedLocation(search.location);
+    setSalaryRange(search.salaryRange);
+    setDuration(search.duration);
+    setSortBy(search.sortBy);
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('all');
+    setSelectedLocation('all');
+    setSalaryRange([salaryData.min, salaryData.max]);
+    setDuration('all');
+    setSortBy('newest');
+  };
+
+  const hasActiveFilters = searchQuery || 
+    selectedCategory !== 'all' || 
+    selectedLocation !== 'all' || 
+    salaryRange[0] > salaryData.min || 
+    salaryRange[1] < salaryData.max ||
+    duration !== 'all' ||
+    sortBy !== 'newest';
+
 
   const shortAssignmentCount = filteredShortAssignments.length;
   const longAssignmentCount = filteredLongAssignments.length;
@@ -112,63 +305,207 @@ export function TwoTabFeed({
 
       {/* Search and Filters */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="relative flex-1">
+        <CardContent className="p-6">
+          {/* Search Bar with Suggestions */}
+          <div className="relative mb-4">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Zoek opdrachten..."
+                ref={searchInputRef}
+                placeholder="Zoek op titel, bedrijf, categorie..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                onFocus={() => setShowSuggestions(true)}
+                className="pl-10 pr-10"
               />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
             </div>
+            
+            {/* Search Suggestions Dropdown */}
+            {showSuggestions && searchSuggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50">
+                {searchSuggestions.map((suggestion, index) => (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setSearchQuery(suggestion);
+                      setShowSuggestions(false);
+                    }}
+                    className="w-full px-3 py-2 text-left hover:bg-muted transition-colors"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-            {/* Category Filter */}
+          {/* Quick Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full lg:w-48">
+              <SelectTrigger>
                 <SelectValue placeholder="Categorie" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Alle categorieën</SelectItem>
                 {allCategories.map(category => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
+                  <SelectItem key={category} value={category}>{category}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            {/* Location Filter */}
             <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger className="w-full lg:w-48">
+              <SelectTrigger>
                 <SelectValue placeholder="Locatie" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Alle locaties</SelectItem>
                 {allLocations.map(location => (
-                  <SelectItem key={location} value={location}>
-                    {location}
-                  </SelectItem>
+                  <SelectItem key={location} value={location}>{location}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
 
-            {/* Clear Filters */}
-            {(searchQuery || selectedCategory !== 'all' || selectedLocation !== 'all') && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('all');
-                  setSelectedLocation('all');
-                }}
-              >
-                Filters wissen
-              </Button>
-            )}
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sorteren" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Nieuwste eerst</SelectItem>
+                <SelectItem value="oldest">Oudste eerst</SelectItem>
+                <SelectItem value="salary_high">Salaris hoog → laag</SelectItem>
+                <SelectItem value="salary_low">Salaris laag → hoog</SelectItem>
+                <SelectItem value="deadline">Deadline eerst</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button
+              variant="outline"
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              className="justify-between"
+            >
+              <span className="flex items-center gap-2">
+                <Filter className="h-4 w-4" />
+                Geavanceerd
+              </span>
+              {showAdvancedFilters ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </Button>
           </div>
+
+          {/* Advanced Filters */}
+          {showAdvancedFilters && (
+            <div className="border-t pt-4 space-y-4">
+              <div>
+                <Label className="text-sm font-medium mb-2 block">Salarisbereik (€/uur)</Label>
+                <Slider
+                  value={salaryRange}
+                  onValueChange={(value: [number, number]) => setSalaryRange(value)}
+                  max={salaryData.max}
+                  min={salaryData.min}
+                  step={5}
+                  className="mb-2"
+                />
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>€{salaryRange[0]}</span>
+                  <span>€{salaryRange[1]}</span>
+                </div>
+              </div>
+
+              {activeTab === 'short' && (
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">Duur</Label>
+                  <Select value={duration} onValueChange={setDuration}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Kies duur" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Alle duur</SelectItem>
+                      <SelectItem value="day">Per dag</SelectItem>
+                      <SelectItem value="week">Per week</SelectItem>
+                      <SelectItem value="month">Per maand</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={saveSearch}>
+                    <Save className="h-4 w-4 mr-2" />
+                    Zoekopdracht opslaan
+                  </Button>
+                  {hasActiveFilters && (
+                    <Button variant="ghost" size="sm" onClick={clearFilters}>
+                      <X className="h-4 w-4 mr-2" />
+                      Filters wissen
+                    </Button>
+                  )}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {activeTab === 'short' ? filteredShortAssignments.length : filteredLongAssignments.length} resultaten
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Search History & Saved Searches */}
+          {(searchHistory.length > 0 || savedSearches.length > 0) && (
+            <div className="border-t pt-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                {searchHistory.length > 0 && (
+                  <div>
+                    <Label className="text-sm font-medium mb-2 flex items-center gap-2">
+                      <History className="h-4 w-4" />
+                      Recent gezocht
+                    </Label>
+                    <div className="flex flex-wrap gap-2">
+                      {searchHistory.map((query, index) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSearchQuery(query)}
+                        >
+                          {query}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {savedSearches.length > 0 && (
+                  <div>
+                    <Label className="text-sm font-medium mb-2 flex items-center gap-2">
+                      <Save className="h-4 w-4" />
+                      Opgeslagen zoekopdrachten
+                    </Label>
+                    <div className="space-y-1">
+                      {savedSearches.map((search) => (
+                        <Button
+                          key={search.id}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => loadSavedSearch(search)}
+                          className="justify-start w-full"
+                        >
+                          {search.query || 'Alle opdrachten'}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -222,7 +559,7 @@ export function TwoTabFeed({
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 {filteredShortAssignments.map((assignment) => (
-                  <ShortAssignmentCard
+                  <AssignmentCard
                     key={assignment.id}
                     assignment={assignment}
                     onClick={() => onAssignmentClick(assignment)}
@@ -266,7 +603,7 @@ export function TwoTabFeed({
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 {filteredLongAssignments.map((assignment) => (
-                  <LongAssignmentCard
+                  <AssignmentCard
                     key={assignment.id}
                     assignment={assignment}
                     onClick={() => onAssignmentClick(assignment)}
@@ -284,176 +621,6 @@ export function TwoTabFeed({
         </TabsContent>
       </Tabs>
     </div>
-  );
-}
-
-// Short Assignment Card Component
-function ShortAssignmentCard({ 
-  assignment, 
-  onClick 
-}: { 
-  assignment: AssignmentWithDetails;
-  onClick: () => void;
-}) {
-  return (
-    <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 group">
-      <CardContent className="p-6">
-        <div className="space-y-4">
-          {/* Header */}
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                {assignment.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {assignment.company_name || assignment.employer_name}
-              </p>
-            </div>
-            <Badge variant="outline" className="gap-1">
-              <Zap className="h-3 w-3" />
-              Kort
-            </Badge>
-          </div>
-
-          {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {assignment.description}
-          </p>
-
-          {/* Details */}
-          <div className="flex flex-wrap gap-3 text-sm">
-            {assignment.location && (
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                {assignment.location}
-              </div>
-            )}
-            {assignment.duration_days && (
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                {assignment.duration_days} dagen
-              </div>
-            )}
-            {assignment.hourly_rate_cents && (
-              <div className="flex items-center gap-1 text-primary font-medium">
-                <Euro className="h-4 w-4" />
-                {assignment.hourly_rate_cents / 100}/uur
-              </div>
-            )}
-            {assignment.remote_allowed && (
-              <Badge variant="secondary">Remote</Badge>
-            )}
-          </div>
-
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Users className="h-4 w-4" />
-              {assignment.application_count} sollicitant{assignment.application_count !== 1 ? 'en' : ''}
-            </div>
-            <Button size="sm" onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}>
-              Bekijk opdracht
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-// Long Assignment Card Component
-function LongAssignmentCard({ 
-  assignment, 
-  onClick 
-}: { 
-  assignment: AssignmentWithDetails;
-  onClick: () => void;
-}) {
-  return (
-    <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 group">
-      <CardContent className="p-6">
-        <div className="space-y-4">
-          {/* Header */}
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                {assignment.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {assignment.company_name || assignment.employer_name}
-              </p>
-            </div>
-            <Badge variant="outline" className="gap-1">
-              <Briefcase className="h-3 w-3" />
-              Vast
-            </Badge>
-          </div>
-
-          {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2">
-            {assignment.description}
-          </p>
-
-          {/* Details */}
-          <div className="flex flex-wrap gap-3 text-sm">
-            {assignment.location && (
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                {assignment.location}
-              </div>
-            )}
-            {assignment.salary_cents && (
-              <div className="flex items-center gap-1 text-primary font-medium">
-                <Euro className="h-4 w-4" />
-                {new Intl.NumberFormat('nl-NL').format(assignment.salary_cents / 100)}/jaar
-              </div>
-            )}
-            {assignment.application_deadline && (
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                Deadline: {new Date(assignment.application_deadline).toLocaleDateString('nl-NL')}
-              </div>
-            )}
-            {assignment.remote_allowed && (
-              <Badge variant="secondary">Remote</Badge>
-            )}
-          </div>
-
-          {/* Benefits */}
-          {assignment.benefits && assignment.benefits.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {assignment.benefits.slice(0, 3).map((benefit: string, index: number) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {benefit}
-                </Badge>
-              ))}
-              {assignment.benefits.length > 3 && (
-                <Badge variant="outline" className="text-xs">
-                  +{assignment.benefits.length - 3} meer
-                </Badge>
-              )}
-            </div>
-          )}
-
-          {/* Footer */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Users className="h-4 w-4" />
-              {assignment.application_count} sollicitant{assignment.application_count !== 1 ? 'en' : ''}
-            </div>
-            <Button size="sm" onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}>
-              Bekijk opdracht
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   );
 }
 
