@@ -4,6 +4,8 @@ import { Footer } from "@/components/ui/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Wallet, 
   Clock, 
@@ -12,25 +14,29 @@ import {
   Building2,
   Calendar,
   TrendingUp,
-  AlertCircle
+  AlertCircle,
+  User
 } from "lucide-react";
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header />
+    <ProtectedRoute>
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
 
-      <main className="flex-1 bg-muted/30">
-        <div className="container py-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-              Welkom terug, Johan
-            </h1>
-            <p className="text-muted-foreground">
-              Hier is een overzicht van je activiteiten
-            </p>
-          </div>
+        <main className="flex-1 bg-muted/30">
+          <div className="container py-8">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                Welkom terug, {user?.email?.split('@')[0] || 'Gebruiker'}
+              </h1>
+              <p className="text-muted-foreground">
+                Hier is een overzicht van je activiteiten
+              </p>
+            </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Content */}
@@ -239,5 +245,6 @@ export default function Dashboard() {
 
       <Footer />
     </div>
+    </ProtectedRoute>
   );
 }
